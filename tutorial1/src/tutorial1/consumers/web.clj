@@ -6,7 +6,8 @@
              [handler :as handler]
              [route :as route]]
             [ring.middleware.json :as json]
-            [tutorial1.producers.file :as file])
+            [tutorial1.producers.file :as file]
+            [tutorial1.handlers.quips :as quips])
   (:import com.fasterxml.jackson.core.JsonGenerationException))
 
 (defn gulp-errors
@@ -21,11 +22,21 @@
 
 (defn api-routes [file]
   (routes
-   (GET "/quip" req
-     (let [quip (get-quip)]
-       {:status 200 :body {:quip "abc"}}))
-   (POST))
-  #_ (INSERT ROUTES HERE))
+   (GET "/quips" req
+     (let [quips (quips/find file)]
+       {:status 200 :body {:quips quips}}))
+   (GET "/quips/random" req
+     (let [quip (quips/random file)]
+       {:status 200 :body quip}))
+   (GET "/quips/count" req
+     (let [quip-count (quips/count-quips file)]
+       {:status 200 :body {:count quip-count}}))
+   (POST "/quips" req
+     (let [quips (quips/save req file)]
+       {:status 200 :body quips}))
+   (DELETE "/quips" req
+     (let [quips (quips/delete-all file)]
+       {:status 204}))))
 
 (defn app [file]
   (-> (api-routes file)
