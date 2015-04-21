@@ -13,7 +13,10 @@
 
 (defn random
   [file]
-  (rand-nth (quip-file/load-quips file)))
+  (let [quips (quip-file/load-quips file)]
+    (if (empty? quips)
+      {}
+      (rand-nth quips))))
 
 (defn count-quips
   [file]

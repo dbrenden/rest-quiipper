@@ -9,7 +9,10 @@
 (defn load-quips
   [file]
   (if (.exists (io/as-file file))
-    (:quips (json/read-str (slurp file) :key-fn keyword))
+    (let [data (slurp file)]
+      (if (> (count data) 0)
+        (:quips (json/read-str data :key-fn keyword))
+        []))
     []))
 
 (defn save-quips

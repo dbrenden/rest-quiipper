@@ -33,7 +33,7 @@
        {:status 200 :body {:count quip-count}}))
    (POST "/quips" req
      (let [quips (quips/save req file)]
-       {:status 200 :body quips}))
+       {:status 201 :body quips}))
    (DELETE "/quips" req
      (let [quips (quips/delete-all file)]
        {:status 204}))))
